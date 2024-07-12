@@ -6,4 +6,4 @@ const document = new mongoose.Schema({
     data:Object
 })
 
-module.exports= mongoose.model("document", document)
+module.exports= mongoose.model("documentModel", document)

@@ -1,5 +1,8 @@
+const express= require("express")
 const mongoose = require("mongoose")
-const documentModel = require("./document.js")
+const {findOrCreateDoc} = require("./controller/docController")
+
+const app=express()
 
 mongoose.connect("mongodb://localhost:27017/google-docs")
 
@@ -37,12 +40,3 @@ io.on("connection", socket => {
     console.log("connected")
 })
 
-
-const findOrCreateDoc = async (id) => {
-    if (id == null) return
-    const doc = await documentModel.findById({_id:id})
-    if (doc) {
-        return doc
-    }
-    return await documentModel.create({ _id: id, data: defaultValue })
-}
