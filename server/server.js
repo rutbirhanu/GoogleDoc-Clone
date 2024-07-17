@@ -13,7 +13,6 @@ const io = require("socket.io")(5000, {
     }
 })
 
-const defaultValue = ""
 
 io.on("connection", socket => {
 

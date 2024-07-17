@@ -36,5 +36,14 @@ const signIn = async () => {
     }
 }
 
+const fetchUserInfo = async () => {
+    try {
+        
+    }
+    catch (err) {
+        
+    }
 
-module.exports= {signIn, signUp}
+}
+
+module.exports= {signIn, signUp, fetchUserInfo}
