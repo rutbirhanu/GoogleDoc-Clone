@@ -14,6 +14,12 @@ form {
 
 h2 {
     text-align: center;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(90deg, #048ece, #c23c03);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 28px;
+    /* color: ; */
 }
 
 .field-container {
@@ -24,6 +30,26 @@ h2 {
     min-width: 230px;
     width: 100%;
     margin: 5px 3px;
+    position: relative;
+}
+
+.field-container span{
+    color: red;
+    font-size: 14px;
+    padding: 5px;
+   display: none;
+}
+
+input:invalid ~ span{
+ display: block;
+}
+
+.icon{
+    position: absolute;
+    top: 48%;
+    left: 15px;
+    height: 12px;
+    color: #8a8a8a;
 }
 
 #text-input {
@@ -32,6 +58,7 @@ h2 {
     border-radius: 10px;
     height: 37px;
     margin: 5px;
+    padding-left: 30px;
 }
 
 .row-fields {
@@ -131,3 +158,4 @@ h2 {
     font-weight: 600;
     text-decoration: underline;
 }
+

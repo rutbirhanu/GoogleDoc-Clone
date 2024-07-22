@@ -1,29 +1,78 @@
+import { useEffect, useState } from "react"
 import ButtonComp from "../component/buttonComp"
-import Checkbox from "../component/checkbox"
 import InputField from "../component/inputField"
 import "./signup.css"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
+import { faUser, faEnvelope, faEye} from '@fortawesome/free-solid-svg-icons'
+
 
 function SignUpPage() {
-  // const navigate = useNavigate()
+ 
+  const [values, setValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  })
+
+  const [sendEmail, setSendEmail] = useState(false)
+  const [errors, setErrors] = useState({})
+  const [isSubmit, setIsSubmit]= useState(false)
   
-  // const navigateToLogin = () => {
-  //   navigate("/signin")
-  // }
+  const validate = (value) => {
+    let tempErrors = {};
+    if (!value.firstName) tempErrors.firstName = "Name should be greater than 2 letter";
+    if (!value.lastName) tempErrors.lastName = "Name should be greater than 2 letter";
+    if (!value.email) {
+      tempErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(value.email)) {
+      tempErrors.email = 'Email is invalid';
+    }
+    if (!value.password) {
+      tempErrors.password = 'Password is required';
+    } else if (value.password.length < 4) {
+      tempErrors.password = 'Password must be at least 4 characters';
+    }
+    
+    return tempErrors
+  };
+
+  const onChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value })
+  }
+  
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmit) {
+      console.log(values)
+    }
+  }, [errors, isSubmit, values])
+  
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    setErrors(validate(values))
+    setIsSubmit(true)
+  }
+  
   return (
     <div className="parent-container">
     <div className="page-container">
-      <h2>Sign Up </h2>
-      <form>
+        <h2>Sign Up </h2>
+        
+      <form onSubmit={handleFormSubmit}>
         <div className="row-fields">
-          <InputField label="First name" />
-        <InputField label="Last name"/>
+          <InputField label="First name" icon={faUser} name="firstName" errorMessage={errors.firstName} pattern="^[A-Za-z]{2,14}$" placeholder="Eyeresualem" value={values.firstName} onChange={onChange} />
+          <InputField label="Last name" icon={faUser} name="lastName" placeholder="Birhanu" pattern="^[A-Za-z]{2,14}$" errorMessage={errors.lastName} value={values.lastName} onChange={onChange}/>
         </div>
-       <InputField label="Email"/>
-        <InputField label="Password" />
-        <Checkbox />
-      </form>
-      <ButtonComp text="Create Account" />
+          <InputField label="Email" name="email" icon={faEnvelope} placeholder="birhanu@gmail.com" pattern="^\S+@\S+\.\S+$" errorMessage={errors.email} value={values.email} onChange={onChange} />
+          <InputField label="Password" name="password" icon={faEye} placeholder="12@4%j" pattern="^.{5,}$" value={values.password} errorMessage={errors.password} onChange={onChange} />
+        
+          <div className="checkbox">
+          <input type="checkbox" name="sendEmail" value={sendEmail} onChange={()=>setSendEmail(!sendEmail)} />
+          <label>Send me helpful emails</label>
+    </div>
+        </form>
+        
+      <ButtonComp text="Create Account" onClick={handleFormSubmit} />
       <div className="divider">
         <span>or</span>
       </div>
@@ -32,7 +81,7 @@ function SignUpPage() {
         <button>continue with Google</button>
       </div>
       <div className="login-link">
-        <p>Already have account ? <Link to="/"><span>Login</span></Link></p>
+        <p>Already have account ? <Link to="/signin"><span>Login</span></Link></p>
       </div>
       </div>
       </div>

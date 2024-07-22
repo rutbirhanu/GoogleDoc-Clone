@@ -2,19 +2,24 @@ import { useNavigate } from "react-router-dom"
 import ButtonComp from "../component/buttonComp"
 import InputField from "../component/inputField"
 import "../page/signin.css"
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
+import { useState } from "react"
 
 function SignInPage() {
   const navigate = useNavigate()
   const navigateToSignup = () => {
     navigate("/signup")
   }
+  const [email, setEmail]= useState("")
   return (
     <div>
       <div className="signin-page-container">
         <div className="signin-card">
           <h2>Login</h2>
-          <InputField label="" />
-          <ButtonComp text="Continue" />
+          <form>
+          <InputField label="Email" placeholder="ruth@gmail.com" icon={faEnvelope} name="email" value={email} pattern="^\S+@\S+\.\S+$" errorMessage="Should be valid email" onChange={(e)=> setEmail(e.target.value)} />
+            <ButtonComp text="Continue" />
+            </form>
           <div className="divider">
             <span>or</span>
           </div>
