@@ -1,4 +1,4 @@
-const documentModel = require("./document.js")
+const documentModel = require("../model/document")
 const crypto = require("crypto");
 
 

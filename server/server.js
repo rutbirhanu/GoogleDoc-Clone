@@ -3,7 +3,8 @@ const mongoose = require("mongoose")
 const { findOrCreateDoc } = require("./controller/docController")
 const admin = require("firebase-admin")
 const serviceAccount = require("./serviceAccountKey.json")
-const userRouter=require("./route/userRoute")
+const userRouter = require("./route/userRoute")
+const cors=require("cors")
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -49,6 +50,6 @@ io.on("connection", socket => {
     console.log("connected")
 })
 
-app.listen(5000, () => {
+app.listen(5001, () => {
     console.log("server started")
 })

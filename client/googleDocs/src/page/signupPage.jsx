@@ -3,10 +3,34 @@ import ButtonComp from "../component/buttonComp"
 import InputField from "../component/inputField"
 import "./signup.css"
 import { Link } from "react-router-dom"
-import { faUser, faEnvelope, faEye} from '@fortawesome/free-solid-svg-icons'
+import { faUser, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons'
+import { auth, googleProvider } from "../firebase"
+import { signInWithPopup } from "firebase/auth"
 
 
 function SignUpPage() {
+
+  const handleSignWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider)
+      const token = await result.user.getIdToken()
+      const response = await fetch("http://localhost:5001/user/signWithGoogle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        }
+      }
+      )
+      const userData= await response.json()
+      console.log(userData)
+    }
+    catch (err) {
+      console.log(err)
+    }
+ }
+
+
  
   const [values, setValues] = useState({
     firstName: "",
@@ -78,7 +102,7 @@ function SignUpPage() {
       </div>
       <div className="google-btn">
         <img src="https://cdn2.hubspot.net/hubfs/53/image8-2.jpg" width="44px" height="29px" style={{borderRadius:"5px", margin:"0 3px"}}/>
-        <button>continue with Google</button>
+        <button onClick={handleSignWithGoogle}>continue with Google</button>
       </div>
       <div className="login-link">
         <p>Already have account ? <Link to="/signin"><span>Login</span></Link></p>

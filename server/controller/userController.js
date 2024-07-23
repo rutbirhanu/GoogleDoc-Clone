@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const userModel = require("../model/user")
 const bcrypt = require("bcrypt")
-
+const admin = require("firebase-admin")
 
 const signUp = async () => {
     try {
@@ -38,7 +38,7 @@ const signIn = async () => {
 
 const verifyToken = async (req, res, next) => {
     try {
-        const idToken = req.header.authorization
+        const idToken = req.headers.authorization
     
         if (!idToken) {
             res.status(401).json("Unauthorized")
@@ -48,7 +48,8 @@ const verifyToken = async (req, res, next) => {
         next()
     }
     catch (err) {
-        res.status(500).json("error has occured")
+        console.log(err)
+        res.status(500).json(err)
     }
     
 }
@@ -58,11 +59,12 @@ const signInWithGoogle = async (req, res) => {
         const { uid, name, email } = req.user
         let user = await userModel.findById(uid)
         if (!user) {
-           user= await userModel.create({_id:uid, email:email, firstName:name})
+           user= await userModel.create({_id:uid, email:email, firstName:name, sendEmail:true})
         }
         res.status(200).json(user)
     }
     catch (err) {
+        console.log(err)
         res.status(400).json("error loading google account")
     }
 }
@@ -75,6 +77,23 @@ const fetchUserInfo = async () => {
         
     }
 
+}
+
+const sendEmail = async (req, res) => {
+    try {
+        const { uid } = req.user
+        const user = await userModel.findById(uid)
+        if (!user) {
+            return res.status(404).json("user not found")
+        }
+        if (user.sendEmail === false)
+        { return }
+        
+
+     }
+    catch (err) {
+        res.status(400).json(err)
+    }
 }
 
 module.exports= {signIn, signUp, fetchUserInfo, verifyToken, signInWithGoogle}
