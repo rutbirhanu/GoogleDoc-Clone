@@ -36,6 +36,37 @@ const signIn = async () => {
     }
 }
 
+const verifyToken = async (req, res, next) => {
+    try {
+        const idToken = req.header.authorization
+    
+        if (!idToken) {
+            res.status(401).json("Unauthorized")
+        }
+        const decodedJwt = await admin.auth().verifyIdToken(idToken)
+        req.user = decodedJwt
+        next()
+    }
+    catch (err) {
+        res.status(500).json("error has occured")
+    }
+    
+}
+
+const signInWithGoogle = async (req, res) => {
+    try { 
+        const { uid, name, email } = req.user
+        let user = await userModel.findById(uid)
+        if (!user) {
+           user= await userModel.create({_id:uid, email:email, firstName:name})
+        }
+        res.status(200).json(user)
+    }
+    catch (err) {
+        res.status(400).json("error loading google account")
+    }
+}
+
 const fetchUserInfo = async () => {
     try {
         
@@ -46,4 +77,4 @@ const fetchUserInfo = async () => {
 
 }
 
-module.exports= {signIn, signUp, fetchUserInfo}
+module.exports= {signIn, signUp, fetchUserInfo, verifyToken, signInWithGoogle}

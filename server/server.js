@@ -1,8 +1,18 @@
 const express= require("express")
 const mongoose = require("mongoose")
-const {findOrCreateDoc} = require("./controller/docController")
+const { findOrCreateDoc } = require("./controller/docController")
+const admin = require("firebase-admin")
+const serviceAccount = require("./serviceAccountKey.json")
+const userRouter=require("./route/userRoute")
 
-const app=express()
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+})
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+app.use("/user",userRouter )
 
 mongoose.connect("mongodb://localhost:27017/google-docs")
 
@@ -39,3 +49,6 @@ io.on("connection", socket => {
     console.log("connected")
 })
 
+app.listen(5000, () => {
+    console.log("server started")
+})
