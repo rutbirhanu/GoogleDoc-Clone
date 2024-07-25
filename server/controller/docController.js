@@ -14,7 +14,6 @@ const findOrCreateDoc = async (id) => {
 }
 
 
-
 const createDoc = async () => {
 
     try {
@@ -58,5 +57,13 @@ const deleteDoc = async (id) => {
     }
 }
 
+const takeSnapshot = async (req, res) => {
+    try {
+        
+    }
+    catch (err) {
+        
+    }
+}
 
 module.exports = {findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc}

@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const userModel = require("../model/user")
 const bcrypt = require("bcrypt")
 const admin = require("firebase-admin")
+const nodemailer= require("nodemailer")
 
 const signUp = async () => {
     try {
@@ -9,6 +10,7 @@ const signUp = async () => {
         const hashed= bcrypt.hash(password, 10)
         const user = await userModel.create({ password: hashed, email, userName })
         res.status(202).json("User registered succuessfully")
+        sendEmail()
     }
     catch (err) {
         res.status(500).json(err)
@@ -79,6 +81,15 @@ const fetchUserInfo = async () => {
 
 }
 
+const transporter = nodemailer.createTransport({
+   service:"gmail",
+    auth: {
+        user: "birhanurut2@gmail.com",
+        pass:"@newpass"
+    }
+})
+
+
 const sendEmail = async (req, res) => {
     try {
         const { uid } = req.user
@@ -89,7 +100,20 @@ const sendEmail = async (req, res) => {
         if (user.sendEmail === false)
         { return }
         
-
+     transporter.sendMail({
+            from: "Google Clone Team",
+            to: user.email,
+            subject: "Thanks for subscribing to Google clone",
+            text:"We are happy that You subscribe to Google clone so we will send You important emails "
+    }, function (error, info) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json(error)
+        } else {
+            console.log(info.response)
+        }
+     })
+        
      }
     catch (err) {
         res.status(400).json(err)
