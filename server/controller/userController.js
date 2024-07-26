@@ -13,6 +13,7 @@ const signUp = async (req,res) => {
         const hashed=await bcrypt.hash(password, 10)
         const user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
         res.status(202).json("User registered succuessfully")
+        sendEmailFunction(req, res)
     }
     catch (err) {
         console.log(err)
@@ -23,12 +24,12 @@ const signUp = async (req,res) => {
 
 const signIn = async (req, res) => {
     try {
-        const { userName, password } = req.body
-        const user = await userModel.find({ userName: userName })
+        const { email, password} = req.body
+        const user = await userModel.findOne({email:email})
         if (!user) {
             return res.status(404).json("user is not found")
         }
-        const compare = bcrypt.compare(password, user.password)
+        const compare = await bcrypt.compare(password, user.password)
         if (compare == false) {
             return res.status(401).json("login failed")
         }
@@ -42,6 +43,7 @@ const signIn = async (req, res) => {
         
     }
     catch (err) {
+        console.log(err)
         res.status(500).json(err)
     }
 }
@@ -109,7 +111,7 @@ const sendEmailFunction = async (req, res) => {
      }
     catch (err) {
         console.log(err)
-        // res.status(400).json(err)
+        res.status(400).json(err)
     }
 }
 

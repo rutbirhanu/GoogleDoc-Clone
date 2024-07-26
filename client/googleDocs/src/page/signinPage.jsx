@@ -10,15 +10,37 @@ function SignInPage() {
   const navigateToSignup = () => {
     navigate("/signup")
   }
-  const [email, setEmail]= useState("")
+ 
+  const [email, setEmail] = useState("")
+  
+  const handleLogin = async (e) => {
+    try {
+      e.preventDefault()
+      console.log(JSON.stringify({ email:email }))
+      const request = await fetch("http://localhost:5001/user/signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({ email:email })
+      })
+    const res = await request.json()
+      console.log(res)
+    }
+    
+    catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <div>
       <div className="signin-page-container">
         <div className="signin-card">
           <h2>Login</h2>
-          <form>
+          <form onSubmit={ handleLogin }>
           <InputField label="Email" placeholder="ruth@gmail.com" icon={faEnvelope} name="email" value={email} pattern="^\S+@\S+\.\S+$" errorMessage="Should be valid email" onChange={(e)=> setEmail(e.target.value)} />
-            <ButtonComp text="Continue" />
+          <InputField label="Password" placeholder="12e456" icon={faEnvelope} name="password" value={email} pattern="^\S+@\S+\.\S+$" errorMessage="Should be valid email" onChange={(e)=> setEmail(e.target.value)} />
+            <ButtonComp text="Continue" onChange={ handleLogin } />
             </form>
           <div className="divider">
             <span>or</span>

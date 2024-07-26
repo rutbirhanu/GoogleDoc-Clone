@@ -1,28 +1,28 @@
+/* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import "../style.css"
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons"
-// import { useEffect, useState } from "react";
+import { useEffect} from "react";
 
-function SnackBar() {
+function SnackBar({ visible, onClose }) {
+    useEffect(() => {
+        if (visible) {
+            const timeout = setTimeout(() => {
+                onClose();
+            }, 5000);
 
-    // const [visible, setVisible] = useState(true);
-
-    // useEffect(() => {
-    //     const timeout = setTimeout(() => {
-    //         setVisible(false);
-    //     }, 5000); 
-
-    //     return () => clearTimeout(timeout);
-    // }, []);
+            return () => clearTimeout(timeout);
+        }
+    }, [visible, onClose]);
 
     return (
         <>
-            {/* {visible && */}
+            {visible &&
                 <div className="toast-container">
                     <FontAwesomeIcon icon={faCircleCheck} style={{ color: "green", height: "18px", paddingLeft: "14px" }} />
                     <span>Sign Up Successfully </span>
                 </div>
-            {/* } */}
+            }
             </>
     )
 }

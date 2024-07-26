@@ -40,6 +40,7 @@ function SignUpPage() {
   })
 
   const [errors, setErrors] = useState({})
+  const [showSnackBar, setShowSnackBar]= useState(false)
   // const [isSubmit, setIsSubmit] = useState(false)
 
   
@@ -68,18 +69,16 @@ function SignUpPage() {
     setValues({ ...values, [name]: current })
   }
   
-  // useEffect(() => {
-  //   if (Object.keys(errors).length === 0 && isSubmit) {
-  //     console.log(values)
-  //   }
-  // }, [errors, isSubmit, values])
-  
+
   const handleFormSubmit = async (e) => {
     try {
       e.preventDefault()
-      setErrors(validate(values))
+      setShowSnackBar(false);
+      const tempErrors=validate(values)
+      setErrors(tempErrors)
   
-      if (Object.keys(errors).length === 0) {
+      if (Object.keys(tempErrors).length === 0) {
+        setShowSnackBar(false)
         const response = await fetch("http://localhost:5001/user/signUp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -91,14 +90,19 @@ function SignUpPage() {
         // setIsSubmit(true)
       }
       else {
-        <SnackBar/>
-        console.log("Form has validation errors. Submission prevented.");
+        setShowSnackBar(true)
+      console.log(showSnackBar)
+        console.log("Form has validation errors.");
       }
     }
     catch (err) {
       console.log(err)
     }
   }
+  
+  const handleCloseSnackBar = () => {
+    setShowSnackBar(false);
+};
   
   return (
     <div className="parent-container">
@@ -130,6 +134,8 @@ function SignUpPage() {
       <div className="login-link">
         <p>Already have account ? <Link to="/signin"><span>Login</span></Link></p>
         </div>
+        {
+        showSnackBar && <SnackBar visible={showSnackBar} onClose={handleCloseSnackBar} />}
       </div>
       </div>
   )
