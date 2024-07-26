@@ -2,23 +2,26 @@ const mongoose = require("mongoose")
 const userModel = require("../model/user")
 const bcrypt = require("bcrypt")
 const admin = require("firebase-admin")
-const nodemailer= require("nodemailer")
+const nodemailer = require("nodemailer")
+require("dotenv").config()
+const jwt= require("jsonwebtoken")
 
-const signUp = async () => {
+
+const signUp = async (req,res) => {
     try {
-        const { userName, email, password } = req.body
-        const hashed= bcrypt.hash(password, 10)
-        const user = await userModel.create({ password: hashed, email, userName })
+        const { firstName,lastName, email, password, sendEmail } = req.body
+        const hashed=await bcrypt.hash(password, 10)
+        const user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
         res.status(202).json("User registered succuessfully")
-        sendEmail()
     }
     catch (err) {
+        console.log(err)
         res.status(500).json(err)
     }
 }
 
 
-const signIn = async () => {
+const signIn = async (req, res) => {
     try {
         const { userName, password } = req.body
         const user = await userModel.find({ userName: userName })
@@ -29,39 +32,26 @@ const signIn = async () => {
         if (compare == false) {
             return res.status(401).json("login failed")
         }
-        res.status(200).json("login successfully")
+        const token = jwt.sign({
+            payload: {
+                userId: user._id
+            }
+        }, process.env.JWT_SECRET, {expiresIn:'10d'}
+        )
+        res.status(200).json({ token,message:"login successfully"})
         
     }
     catch (err) {
         res.status(500).json(err)
-        
     }
-}
-
-const verifyToken = async (req, res, next) => {
-    try {
-        const idToken = req.headers.authorization
-    
-        if (!idToken) {
-            res.status(401).json("Unauthorized")
-        }
-        const decodedJwt = await admin.auth().verifyIdToken(idToken)
-        req.user = decodedJwt
-        next()
-    }
-    catch (err) {
-        console.log(err)
-        res.status(500).json(err)
-    }
-    
 }
 
 const signInWithGoogle = async (req, res) => {
     try { 
-        const { uid, name, email } = req.user
-        let user = await userModel.findById(uid)
+        const { name, email } = req.user
+        let user = await userModel.findOne({email:email})
         if (!user) {
-           user= await userModel.create({_id:uid, email:email, firstName:name, sendEmail:true})
+           user= await userModel.create({ email:email, firstName:name, sendEmail:true})
         }
         res.status(200).json(user)
     }
@@ -84,18 +74,19 @@ const fetchUserInfo = async () => {
 const transporter = nodemailer.createTransport({
    service:"gmail",
     auth: {
-        user: "birhanurut2@gmail.com",
-        pass:"@newpass"
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.APP_PASSWORD
     }
 })
 
-
-const sendEmail = async (req, res) => {
+const sendEmailFunction = async (req, res) => {
     try {
-        const { uid } = req.user
+        const uid  = "1234567"
         const user = await userModel.findById(uid)
         if (!user) {
-            return res.status(404).json("user not found")
+            console.log("user not found")
+            return
+            // return res.status(404).json("user not found")
         }
         if (user.sendEmail === false)
         { return }
@@ -108,7 +99,8 @@ const sendEmail = async (req, res) => {
     }, function (error, info) {
         if (error) {
             console.log(error)
-            return res.status(400).json(error)
+            return 
+            // return res.status(400).json(error)
         } else {
             console.log(info.response)
         }
@@ -116,8 +108,9 @@ const sendEmail = async (req, res) => {
         
      }
     catch (err) {
-        res.status(400).json(err)
+        console.log(err)
+        // res.status(400).json(err)
     }
 }
 
-module.exports= {signIn, signUp, fetchUserInfo, verifyToken, signInWithGoogle}
+module.exports= {signIn, signUp, fetchUserInfo, signInWithGoogle}

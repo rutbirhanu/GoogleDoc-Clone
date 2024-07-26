@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import ButtonComp from "../component/buttonComp"
 import InputField from "../component/inputField"
 import "./signup.css"
@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { faUser, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons'
 import { auth, googleProvider } from "../firebase"
 import { signInWithPopup } from "firebase/auth"
+import SnackBar from "../component/snackBarComp"
 
 
 function SignUpPage() {
@@ -30,18 +31,17 @@ function SignUpPage() {
     }
  }
 
-
- 
   const [values, setValues] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    sendEmail:false
   })
 
-  const [sendEmail, setSendEmail] = useState(false)
   const [errors, setErrors] = useState({})
-  const [isSubmit, setIsSubmit]= useState(false)
+  // const [isSubmit, setIsSubmit] = useState(false)
+
   
   const validate = (value) => {
     let tempErrors = {};
@@ -62,19 +62,42 @@ function SignUpPage() {
   };
 
   const onChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value })
+    const { name, value, checked , type} = e.target
+    const current = type === "checkbox" ? checked : value
+    
+    setValues({ ...values, [name]: current })
   }
   
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmit) {
-      console.log(values)
-    }
-  }, [errors, isSubmit, values])
+  // useEffect(() => {
+  //   if (Object.keys(errors).length === 0 && isSubmit) {
+  //     console.log(values)
+  //   }
+  // }, [errors, isSubmit, values])
   
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    setErrors(validate(values))
-    setIsSubmit(true)
+  const handleFormSubmit = async (e) => {
+    try {
+      e.preventDefault()
+      setErrors(validate(values))
+  
+      if (Object.keys(errors).length === 0) {
+        const response = await fetch("http://localhost:5001/user/signUp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values)
+        });
+
+        const formRes = await response.json()
+        console.log(formRes)
+        // setIsSubmit(true)
+      }
+      else {
+        <SnackBar/>
+        console.log("Form has validation errors. Submission prevented.");
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
   }
   
   return (
@@ -91,8 +114,8 @@ function SignUpPage() {
           <InputField label="Password" name="password" icon={faEye} placeholder="12@4%j" pattern="^.{5,}$" value={values.password} errorMessage={errors.password} onChange={onChange} />
         
           <div className="checkbox">
-          <input type="checkbox" name="sendEmail" value={sendEmail} onChange={()=>setSendEmail(!sendEmail)} />
-          <label>Send me helpful emails</label>
+          <input type="checkbox" name="sendEmail" checked={values.sendEmail} onChange={onChange} />
+            <label>Send me helpful emails</label>
     </div>
         </form>
         
@@ -106,7 +129,7 @@ function SignUpPage() {
       </div>
       <div className="login-link">
         <p>Already have account ? <Link to="/signin"><span>Login</span></Link></p>
-      </div>
+        </div>
       </div>
       </div>
   )

@@ -1,8 +1,9 @@
 const express= require("express")
 const router = express.Router() 
-const {verifyToken, signIn, signUp, fetchUserInfo,  signInWithGoogle}= require("../controller/userController")
+const { signIn, signUp,  signInWithGoogle}= require("../controller/userController")
+const verifyGoogleToken= require("../middleware/verifyGoogleToken")
 
-router.route("/signUp").post()
-router.route("/signWithGoogle").post(verifyToken, signInWithGoogle)
+router.route("/signUp").post(signUp)
+router.route("/signWithGoogle").post(verifyGoogleToken, signInWithGoogle)
 
 module.exports=router

@@ -27,6 +27,36 @@ body{
     background-color: #f3f3f3;
 }
 
-@media screen {
-    
+.toast-container{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+border: 1px solid green;
+height: 40px;
+width: 270px;
+display: flex;
+align-items: center;
+border-radius: 5px;
+box-shadow: 0 0 2px 2px rgb(209, 209, 209);
+}
+
+.toast-container span{
+    padding: 0 10px;
+}
+
+.toast-container::after{
+    content: "";
+    height: 3px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: green;
+    animation: slideOut 5s linear forwards;
+}
+
+@keyframes slideOut{
+    100%{
+        width: 0;
+    }
 }
