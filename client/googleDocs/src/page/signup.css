@@ -33,18 +33,18 @@ h2 {
     position: relative;
 }
 
-.field-container span{
+.field-container span {
     color: red;
     font-size: 14px;
     padding: 5px;
-   display: none;
+    display: none;
 }
 
-input:invalid ~ span{
- display: block;
+input:invalid~span {
+    display: block;
 }
 
-.icon{
+.icon {
     position: absolute;
     top: 48%;
     left: 15px;
@@ -66,7 +66,8 @@ input:invalid ~ span{
     gap: 10px;
     flex-wrap: wrap;
 }
-.parent-container{
+
+.parent-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,7 +86,8 @@ input:invalid ~ span{
     padding: 30px 15px;
     box-shadow: 0 0 10px 2px rgb(240, 240, 240);
 }
-.button-container{
+
+.button-container {
     width: 100%;
     display: flex;
     align-items: center;
@@ -158,4 +160,3 @@ input:invalid ~ span{
     font-weight: 600;
     text-decoration: underline;
 }
-

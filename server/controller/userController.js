@@ -13,7 +13,7 @@ const signUp = async (req,res) => {
         const hashed=await bcrypt.hash(password, 10)
         const user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
         res.status(202).json("User registered succuessfully")
-        sendEmailFunction(req, res)
+        // sendEmailFunction(req, res)
     }
     catch (err) {
         console.log(err)
@@ -25,7 +25,8 @@ const signUp = async (req,res) => {
 const signIn = async (req, res) => {
     try {
         const { email, password} = req.body
-        const user = await userModel.findOne({email:email})
+        const user = await userModel.findOne({ email: email })
+      
         if (!user) {
             return res.status(404).json("user is not found")
         }
@@ -37,8 +38,9 @@ const signIn = async (req, res) => {
             payload: {
                 userId: user._id
             }
-        }, process.env.JWT_SECRET, {expiresIn:'10d'}
+        }, process.env.JWT_SECRET
         )
+        res.cookie('token', token, { httpOnly: true,secure:false ,maxAge: 10 * 24 * 60 * 60 * 1000 });
         res.status(200).json({ token,message:"login successfully"})
         
     }

@@ -16,6 +16,9 @@ body{
     box-shadow: 0 0 6px 0 rgb(193, 193, 193);
     background-color: white;
 }
+#container .ql-editor p{
+background-color: white;
+}
 
 #container .ql-toolbar.ql-snow {
     display: flex;
@@ -24,8 +27,9 @@ body{
     top: 0;
     z-index: 1;
     box-shadow: 0 0 6px 0 rgb(193, 193, 193);
-    background-color: #f3f3f3;
+    background-color: #ffffff;
 }
+
 
 .toast-container{
     position: absolute;

@@ -3,7 +3,7 @@ require("dotenv").config()
 
 const verifyToken = async (req, res, next) => {
     try {
-        const token = req.headers.authorization
+        const token = req.cookies.token;
         if (!token) {
             res.status(401).json("unauthorized")
         }
@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) => {
             if (err) {
                 return res.status(401).json("unauthorized")
             }
-            req.user = decodedJwt.payload
+            req.user = decoded.payload
             next()
         })
     }

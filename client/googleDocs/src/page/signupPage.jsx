@@ -74,9 +74,9 @@ function SignUpPage() {
     try {
       e.preventDefault()
       setShowSnackBar(false);
+
       const tempErrors=validate(values)
       setErrors(tempErrors)
-  
       if (Object.keys(tempErrors).length === 0) {
         setShowSnackBar(false)
         const response = await fetch("http://localhost:5001/user/signUp", {

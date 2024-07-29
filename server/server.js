@@ -1,19 +1,30 @@
-const express= require("express")
+const express = require("express")
 const mongoose = require("mongoose")
 const { findOrCreateDoc } = require("./controller/docController")
 const admin = require("firebase-admin")
 const serviceAccount = require("./serviceAccountKey.json")
+const cookieParser = require("cookie-parser")
 const userRouter = require("./route/userRoute")
-const cors=require("cors")
+const cors = require("cors")
+const documentModel= require("./model/document")
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 })
 
 const app = express()
-app.use(cors())
+
+const corsOptions = {
+    origin: 'http://localhost:5173', // Set the specific origin of your frontend application
+    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions));
 app.use(express.json())
-app.use("/user",userRouter )
+app.use(cookieParser());
+app.use("/user", userRouter)
 
 mongoose.connect("mongodb://localhost:27017/google-docs")
 
@@ -23,7 +34,6 @@ const io = require("socket.io")(5000, {
         methods: ["GET", "POST"]
     }
 })
-
 
 io.on("connection", socket => {
 
@@ -38,7 +48,7 @@ io.on("connection", socket => {
 
         socket.on("save-doc", async docData => {
             try {
-            await documentModel.findByIdAndUpdate(documentId, {data:docData })
+                await documentModel.findByIdAndUpdate(documentId, { data: docData })
 
             } catch (err) {
                 console.error('Error updating document:', err);
