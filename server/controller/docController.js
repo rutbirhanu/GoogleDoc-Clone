@@ -1,18 +1,10 @@
 const documentModel = require("../model/document")
 const crypto = require("crypto");
-
+const { createCanvas } = require('canvas');
+const path = require('path');
+const fs = require('fs');
 
 const defaultValue = ""
-
-const findOrCreateDoc = async (id) => {
-    if (id == null) return
-    const doc = await documentModel.findById({_id:id})
-    if (doc) {
-        return doc
-    }
-    return await documentModel.create({ _id: id, data: defaultValue })
-}
-
 
 const createDoc = async () => {
 
@@ -26,24 +18,39 @@ const createDoc = async () => {
     }
 }
 
+
+
+const findOrCreateDoc = async (id) => {
+    if (id == null) return
+    const doc = await documentModel.findById({ _id: id })
+    if (doc) {
+        return doc
+    }
+    return await documentModel.create({ _id: id, data: defaultValue })
+
+}
+
+
 const findDoc = async (id) => {
     try {
         const doc = await documentModel.findById({ _id: id })
-        res.status(200).json(doc)
+        const previewPath = await generatePreview(doc.data, documentId);
+        console.log(previewPath)
+        res.status(200).json({ doc, previewPath })
     }
     catch (err) {
         res.status(500).json(err)
-        
+
     }
 }
 
 const updateDoc = async (id, docData) => {
     try {
-        await documentModel.findByIdAndUpdate(id, {data:docData })
+        await documentModel.findByIdAndUpdate(id, { data: docData })
         res.status(200).json("updated")
     }
     catch (err) {
-        res.status(500).json(err) 
+        res.status(500).json(err)
     }
 }
 
@@ -53,17 +60,17 @@ const deleteDoc = async (id) => {
         res.status(200).json("deleted")
     }
     catch (err) {
-        res.status(500).json(err) 
+        res.status(500).json(err)
     }
 }
 
 const takeSnapshot = async (req, res) => {
     try {
-        
+
     }
     catch (err) {
-        
+
     }
 }
 
-module.exports = {findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc}
+module.exports = { findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc }

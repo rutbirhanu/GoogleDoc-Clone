@@ -6,7 +6,11 @@ const serviceAccount = require("./serviceAccountKey.json")
 const cookieParser = require("cookie-parser")
 const userRouter = require("./route/userRoute")
 const cors = require("cors")
-const documentModel= require("./model/document")
+const documentModel = require("./model/document")
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require("body-parser")
+
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -25,6 +29,9 @@ app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser());
 app.use("/user", userRouter)
+const multer = require("multer")
+
+const upload = multer({ dest: 'previews/' }); // Temporary directory
 
 mongoose.connect("mongodb://localhost:27017/google-docs")
 
@@ -59,6 +66,26 @@ io.on("connection", socket => {
 
     console.log("connected")
 })
+
+app.post('/api/documents/:id/preview', upload.single('file'), (req, res) => {
+    const { id } = req.params;
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const previewPath = path.join(__dirname, 'previews', `${id}.png`);
+
+    fs.rename(file.path, previewPath, (err) => {
+        if (err) {
+            console.error('Failed to save image', err);
+            return res.status(500).json({ message: 'Failed to save image' });
+        }
+
+        res.status(200).json({ message: 'Preview saved' });
+    });
+});
 
 app.listen(5001, () => {
     console.log("server started")
