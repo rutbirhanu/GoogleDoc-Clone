@@ -44,6 +44,32 @@ const findDoc = async (id) => {
     }
 }
 
+const findAllDoc = async (req, res) => {
+    try {
+        const docs = await documentModel.find()
+        let imgFiles;
+        const previewDir = path.join(__dirname, "..", "previews")
+        try {
+            const files = await fs.promises.readdir(previewDir);
+            // Filter for .png files
+            imgFiles = files.filter(file => path.extname(file).toLowerCase() === ".png");
+        }
+        catch (dirError) {
+            console.log(dirError)
+            res.status(404).json("preview files doesn't exist")
+        }
+        const docWithImg = docs.map(doc => ({
+            ...doc.toObject(),
+            "image":`previews/${doc._id}.png`
+        }))
+        res.status(200).json(docWithImg)
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json("error occurred")
+    }
+} 
+
 const updateDoc = async (id, docData) => {
     try {
         await documentModel.findByIdAndUpdate(id, { data: docData })
@@ -64,13 +90,6 @@ const deleteDoc = async (id) => {
     }
 }
 
-const takeSnapshot = async (req, res) => {
-    try {
 
-    }
-    catch (err) {
 
-    }
-}
-
-module.exports = { findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc }
+module.exports = { findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc, findAllDoc}

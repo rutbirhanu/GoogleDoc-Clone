@@ -1,8 +1,8 @@
 const express= require("express")
 const router = express.Router()
-const {findDoc} = require("../controller/docController")
+const {findAllDoc} = require("../controller/docController")
 
-router.route.get(findDoc)
+router.route("/get_all").get(findAllDoc)
 
 
 module.exports= router

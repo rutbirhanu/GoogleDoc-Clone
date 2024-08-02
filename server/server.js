@@ -5,6 +5,7 @@ const admin = require("firebase-admin")
 const serviceAccount = require("./serviceAccountKey.json")
 const cookieParser = require("cookie-parser")
 const userRouter = require("./route/userRoute")
+const docRouter = require("./route/docRoute")
 const cors = require("cors")
 const documentModel = require("./model/document")
 const fs = require('fs');
@@ -29,6 +30,9 @@ app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser());
 app.use("/user", userRouter)
+app.use("/doc", docRouter)
+app.use('/previews', express.static(path.join(__dirname, 'previews')));
+
 const multer = require("multer")
 
 const upload = multer({ dest: 'previews/' }); // Temporary directory

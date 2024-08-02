@@ -65,7 +65,6 @@ function TextEditor() {
 
             const formData = new FormData();
             formData.append('file', imgBlob, 'document-preview.png');
-console.log(formData)
            const req = await fetch(`http://localhost:5001/api/documents/${documentId}/preview`, {
                method: 'POST',
              
@@ -107,12 +106,6 @@ console.log(formData)
 
     return (
         <div id="container" ref={wrapperRef}>
-            {/* {previewPath && (
-        <div>
-          <h3>Preview Image</h3>
-          <img src={`http://localhost:5000/${previewPath}`} alt="Document Preview" />
-        </div>
-            )} */}
         </div>
     )
 }

@@ -20,6 +20,18 @@ body{
 background-color: white;
 }
 
+#container .ql-editor:after {
+    content: "";
+    display: block;
+    width: 8.5in;
+    height: 1px;
+    background: black;
+    position: absolute;
+    left: 2.33in;
+    /* right: 0; */
+    bottom: 1in; /* Adjust to simulate a page break */
+}
+
 #container .ql-toolbar.ql-snow {
     display: flex;
     justify-content: center;
