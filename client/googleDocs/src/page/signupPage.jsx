@@ -2,7 +2,7 @@ import { useState } from "react"
 import ButtonComp from "../component/buttonComp"
 import InputField from "../component/inputField"
 import "./signup.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { faUser, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons'
 import { auth, googleProvider } from "../firebase"
 import { signInWithPopup } from "firebase/auth"
@@ -11,21 +11,25 @@ import SnackBar from "../component/snackBarComp"
 
 function SignUpPage() {
 
+  const navigate = useNavigate()
+  
   const handleSignWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider)
       const token = await result.user.getIdToken()
-      // Cookies.set('authToken', token, { expires: 10 });
-console.log(token)
       const response = await fetch("http://localhost:5001/user/signWithGoogle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: token
-        }
+        },
+        credentials:"include"
       }
       )
-      const userData= await response.json()
+      const userData = await response.json()
+      if (response.ok) {
+        navigate("/")
+      }
       console.log(userData)
     }
     catch (err) {
@@ -90,6 +94,9 @@ console.log(token)
         const formRes = await response.json()
         console.log(formRes)
         // setIsSubmit(true)
+        if (response.ok) {
+          navigate("/")
+        }
       }
       else {
         setShowSnackBar(true)

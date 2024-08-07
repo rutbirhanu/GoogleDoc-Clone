@@ -16,7 +16,7 @@ function LandingPage() {
                 headers: {
                     "Content-Type": "application/json" // Correct way to set headers
               },
-                
+              credentials: "include" 
                 
             });
             

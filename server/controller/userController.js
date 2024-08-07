@@ -8,9 +8,13 @@ const jwt= require("jsonwebtoken")
 
 const signUp = async (req,res) => {
     try {
-        const { firstName,lastName, email, password, sendEmail } = req.body
+        const { firstName, lastName, email, password, sendEmail } = req.body
+        let user = await userModel.findOne({ email: email })
+        if (user) {
+            return res.status(409).json("email already exist")
+        }
         const hashed=await bcrypt.hash(password, 10)
-        const user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
+         user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
         res.status(201).json("User registered succuessfully")
         // sendEmailFunction(req, res)
     }
@@ -56,6 +60,13 @@ const signInWithGoogle = async (req, res) => {
         if (!user) {
            user= await userModel.create({ email:email, firstName:name, sendEmail:true})
         }
+        const token = jwt.sign({
+            payload: {
+                userId: user._id
+            }
+        }, process.env.JWT_SECRET
+        )
+        res.cookie('token', token, { httpOnly: true, secure: false, maxAge: 10 * 24 * 60 * 60 * 1000 });
         res.status(200).json(user)
     }
     catch (err) {
