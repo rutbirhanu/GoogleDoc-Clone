@@ -1,7 +1,6 @@
 const mongoose = require("mongoose")
 const userModel = require("../model/user")
 const bcrypt = require("bcrypt")
-const admin = require("firebase-admin")
 const nodemailer = require("nodemailer")
 require("dotenv").config()
 const jwt= require("jsonwebtoken")

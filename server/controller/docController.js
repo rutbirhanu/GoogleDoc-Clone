@@ -50,6 +50,7 @@ const findAllDoc = async (req, res) => {
         let imgFiles;
         const previewDir = path.join(__dirname, "..", "previews")
         try {
+            console.log(req.user)
             const files = await fs.promises.readdir(previewDir);
             // Filter for .png files
             imgFiles = files.filter(file => path.extname(file).toLowerCase() === ".png");
@@ -60,7 +61,7 @@ const findAllDoc = async (req, res) => {
         }
         const docWithImg = docs.map(doc => ({
             ...doc.toObject(),
-            "image":`previews/${doc._id}.png`
+            "image": `previews/${doc._id}.png`
         }))
         res.status(200).json(docWithImg)
     }
@@ -68,7 +69,7 @@ const findAllDoc = async (req, res) => {
         console.log(err)
         res.status(500).json("error occurred")
     }
-} 
+}
 
 const updateDoc = async (id, docData) => {
     try {
@@ -92,4 +93,4 @@ const deleteDoc = async (id) => {
 
 
 
-module.exports = { findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc, findAllDoc}
+module.exports = { findOrCreateDoc, findDoc, createDoc, updateDoc, deleteDoc, findAllDoc }

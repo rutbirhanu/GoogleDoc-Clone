@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {useEffect, useState} from "react"
 import "./landing.css"
 
 function LandingPage() {
 
   const [docs, setDocs] = useState([])
+  const [displayContent, setDisplayContent] = useState(true)
+  const navigate= useNavigate()
   
   useEffect(() => {
     const fetchData = async () => {
@@ -13,15 +15,17 @@ function LandingPage() {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json" // Correct way to set headers
-                }
+              },
+                
+                
             });
             
-            if (!req.ok) {
+          if (!req.ok) {
+              setDisplayContent(false)
                 throw new Error(`HTTP error! Status: ${req.status}`);
             }
             
           const data = await req.json();
-          console.log(data)
           setDocs(data)
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -30,6 +34,10 @@ function LandingPage() {
 
     fetchData();
   }, []);
+
+  if (!displayContent) {
+    navigate("/signin")
+  }
   
   return (
     <div className="landing-parent-cont">

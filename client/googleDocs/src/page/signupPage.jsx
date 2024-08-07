@@ -7,7 +7,7 @@ import { faUser, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons'
 import { auth, googleProvider } from "../firebase"
 import { signInWithPopup } from "firebase/auth"
 import SnackBar from "../component/snackBarComp"
-
+// import Cookies from 'js-cookie';
 
 function SignUpPage() {
 
@@ -15,6 +15,8 @@ function SignUpPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider)
       const token = await result.user.getIdToken()
+      // Cookies.set('authToken', token, { expires: 10 });
+console.log(token)
       const response = await fetch("http://localhost:5001/user/signWithGoogle", {
         method: "POST",
         headers: {
