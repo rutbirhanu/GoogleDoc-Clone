@@ -12,7 +12,7 @@ const signUp = async (req,res) => {
         const { firstName,lastName, email, password, sendEmail } = req.body
         const hashed=await bcrypt.hash(password, 10)
         const user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
-        res.status(202).json("User registered succuessfully")
+        res.status(201).json("User registered succuessfully")
         // sendEmailFunction(req, res)
     }
     catch (err) {
@@ -65,15 +65,6 @@ const signInWithGoogle = async (req, res) => {
     }
 }
 
-const fetchUserInfo = async () => {
-    try {
-        
-    }
-    catch (err) {
-        
-    }
-
-}
 
 const transporter = nodemailer.createTransport({
    service:"gmail",
@@ -117,4 +108,4 @@ const sendEmailFunction = async (req, res) => {
     }
 }
 
-module.exports= {signIn, signUp, fetchUserInfo, signInWithGoogle}
+module.exports= {signIn, signUp, signInWithGoogle}

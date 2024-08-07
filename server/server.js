@@ -11,7 +11,7 @@ const documentModel = require("./model/document")
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require("body-parser")
-
+const connectDB=require("./config/dbConfig")
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -37,7 +37,15 @@ const multer = require("multer")
 
 const upload = multer({ dest: 'previews/' }); // Temporary directory
 
-mongoose.connect("mongodb://localhost:27017/google-docs")
+(async () => {
+    try {
+        await connectDB(process.env.MONGODB_CONNECTION);
+        console.log("Database connected");
+    } catch (err) {
+        console.error("Error connecting to the database:", err);
+        process.exit(1); // Exit process if database connection fails
+    }
+})();
 
 const io = require("socket.io")(5000, {
     cors: {
@@ -94,3 +102,6 @@ app.post('/api/documents/:id/preview', upload.single('file'), (req, res) => {
 app.listen(5001, () => {
     console.log("server started")
 })
+
+
+module.exports= app
