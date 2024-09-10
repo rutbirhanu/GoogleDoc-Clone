@@ -95,7 +95,7 @@ function SignUpPage() {
         console.log(formRes)
         // setIsSubmit(true)
         if (response.ok) {
-          navigate("/")
+          navigate("/signin")
         }
       }
       else {

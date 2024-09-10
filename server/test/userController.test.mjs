@@ -18,15 +18,14 @@ describe("test user controller", () => {
     })
 
     describe("test registration endpoint", () => {
-
+        let user = {
+            "firstName": "ruth",
+            "lastName": "birhanu",
+            "email": "birha@gmail.com",
+            "password": "yes",
+            "sendEmail": true
+        }
         it("post new user", () => {
-            let user = {
-                "firstName": "ruth",
-                "lastName": "birhanu",
-                "email": "birha@gmail.com",
-                "password": "yes",
-                "sendEmail": true
-            }
             chai.request.execute(app)
                 .post("/user/signUp")
                 .send(user)
@@ -36,6 +35,20 @@ describe("test user controller", () => {
                     }
                     expect(res).to.have.status(201)
                 })
+        })
+
+        it("return error message when email duplication happends", () => {
+            chai.request.execute(app)
+                .post("/user/signup")
+                .send(user)
+            end((err, res) => {
+                if (err) {
+                    expect(res).to.have.status(409)
+                    expect(res.body).to.include("email already exist")
+                }
+               
+                })
+
         })
 
         it("fetch users data", () => {

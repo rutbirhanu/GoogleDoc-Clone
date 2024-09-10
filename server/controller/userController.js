@@ -1,20 +1,21 @@
-const mongoose = require("mongoose")
 const userModel = require("../model/user")
+const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const nodemailer = require("nodemailer")
 require("dotenv").config()
-const jwt= require("jsonwebtoken")
+const jwt = require("jsonwebtoken")
 
 
-const signUp = async (req,res) => {
+const signUp = async (req, res) => {
     try {
         const { firstName, lastName, email, password, sendEmail } = req.body
+        console.log("hi")
         let user = await userModel.findOne({ email: email })
         if (user) {
             return res.status(409).json("email already exist")
         }
-        const hashed=await bcrypt.hash(password, 10)
-         user = await userModel.create({ password: hashed,firstName, lastName, email,sendEmail })
+        const hashed = await bcrypt.hash(password, 10)
+        user = await userModel.create({ password: hashed, firstName, lastName, email, sendEmail })
         res.status(201).json("User registered succuessfully")
         // sendEmailFunction(req, res)
     }
@@ -27,9 +28,9 @@ const signUp = async (req,res) => {
 
 const signIn = async (req, res) => {
     try {
-        const { email, password} = req.body
+        const { email, password } = req.body
         const user = await userModel.findOne({ email: email })
-      
+
         if (!user) {
             return res.status(404).json("user is not found")
         }
@@ -43,9 +44,9 @@ const signIn = async (req, res) => {
             }
         }, process.env.JWT_SECRET
         )
-        res.cookie('token', token, { httpOnly: true,secure:false ,maxAge: 10 * 24 * 60 * 60 * 1000 });
-        res.status(200).json({ token,message:"login successfully"})
-        
+        res.cookie('token', token, { httpOnly: true, secure: false, maxAge: 10 * 24 * 60 * 60 * 1000 });
+        res.status(200).json({ token, message: "login successfully" })
+
     }
     catch (err) {
         console.log(err)
@@ -54,11 +55,11 @@ const signIn = async (req, res) => {
 }
 
 const signInWithGoogle = async (req, res) => {
-    try { 
+    try {
         const { name, email } = req.user
-        let user = await userModel.findOne({email:email})
+        let user = await userModel.findOne({ email: email })
         if (!user) {
-           user= await userModel.create({ email:email, firstName:name, sendEmail:true})
+            user = await userModel.create({ email: email, firstName: name, sendEmail: true })
         }
         const token = jwt.sign({
             payload: {
@@ -77,7 +78,7 @@ const signInWithGoogle = async (req, res) => {
 
 
 const transporter = nodemailer.createTransport({
-   service:"gmail",
+    service: "gmail",
     auth: {
         user: process.env.SENDER_EMAIL,
         pass: process.env.APP_PASSWORD
@@ -86,36 +87,35 @@ const transporter = nodemailer.createTransport({
 
 const sendEmailFunction = async (req, res) => {
     try {
-        const uid  = "1234567"
+        const uid = "1234567"
         const user = await userModel.findById(uid)
         if (!user) {
             console.log("user not found")
             return
             // return res.status(404).json("user not found")
         }
-        if (user.sendEmail === false)
-        { return }
-        
-     transporter.sendMail({
+        if (user.sendEmail === false) { return }
+
+        transporter.sendMail({
             from: "Google Clone Team",
             to: user.email,
             subject: "Thanks for subscribing to Google clone",
-            text:"We are happy that You subscribe to Google clone so we will send You important emails "
-    }, function (error, info) {
-        if (error) {
-            console.log(error)
-            return 
-            // return res.status(400).json(error)
-        } else {
-            console.log(info.response)
-        }
-     })
-        
-     }
+            text: "We are happy that You subscribe to Google clone so we will send You important emails "
+        }, function (error, info) {
+            if (error) {
+                console.log(error)
+                return
+                // return res.status(400).json(error)
+            } else {
+                console.log(info.response)
+            }
+        })
+
+    }
     catch (err) {
         console.log(err)
         res.status(400).json(err)
     }
 }
 
-module.exports= {signIn, signUp, signInWithGoogle}
+module.exports = { signIn, signUp, signInWithGoogle }

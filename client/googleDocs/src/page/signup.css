@@ -61,6 +61,10 @@ input:invalid~span {
     padding-left: 30px;
 }
 
+.button-container button:hover {
+    cursor: pointer;
+}
+
 .row-fields {
     width: 100%;
     display: flex;
@@ -157,30 +161,33 @@ input:invalid~span {
         width: 100vw;
         height: 100vh;
     } */
-    .page-container{
+    .page-container {
         width: 95vw;
     }
 
-    .page-container form{
+    .page-container form {
         display: flex;
         align-items: center;
         justify-content: flex-start;
     }
-    .field-container{
+
+    .field-container {
         width: 80vw;
     }
-    .signup-btn{
+
+    .signup-btn {
         width: 70vw;
     }
 
-    .google-btn{
+    .google-btn {
         width: 70vw;
     }
-    .checkbox{
-      width: 80vw;
+
+    .checkbox {
+        width: 80vw;
     }
 
-    .row-fields{
+    .row-fields {
         width: 80vw;
     }
 }
