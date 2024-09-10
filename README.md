@@ -15,7 +15,7 @@ This project is a Google Doc clone built using React for the frontend, Node.js f
 
 -  <img src="https://img.icons8.com/color/48/000000/react-native.png" alt="React" width="20" height="20"/>  React: Frontend library for building the user interface.
 -  <img src="https://img.icons8.com/color/48/000000/nodejs.png" alt="Node.js" width="30" height="30"/>  Node.js: Backend runtime environment to handle server-side logic.
--  <img src="https://img.icons8.com/color/48/000000/mongodb.png" alt="MongoDB" width="20" height="20"/>  MongoDB: NoSQL database for storing documents.
+-  <img src="https://img.icons8.com/color/48/000000/mongodb.png" alt="MongoDB" width="20" height="20"/>  MongoDB: For storing documents.
 -  Quill: Rich text editor for document creation and formatting.
 -  HTML to Canvas Converter: Used to convert the first page of a document into an image for preview.
 -  <img src="https://img.icons8.com/fluency/48/000000/express-js.png" alt="Express" width="25" height="20"/>  Express: Web framework for Node.js.
