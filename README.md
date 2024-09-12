@@ -1,6 +1,6 @@
 ## Google Doc Clone 
 
-This project is a Google Doc clone built using React for the frontend, Node.js for the backend, and MongoDB as the database. It features a rich text editor powered by Quill and includes the ability to convert the first page of a document to an image using the " html-to-canvas"  converter. The image is then displayed in the recent document section.
+This project is a Google Doc clone built using React for the frontend, Node.js(Express.js) for the backend, and MongoDB as the database. It features a rich text editor powered by Quill and includes the ability to convert the first page of a document to an image using the " html-to-canvas"  converter. The image is then displayed in the recent document section.
 
 
 ## Features
