@@ -4,7 +4,7 @@ This project is a Google Doc clone built using React for the frontend, Node.js(E
 
 
 ## Features
--  Rich Text Editing: Utilize the Quill editor for rich text formatting and document creation.
+-  Rich Text Editing: Utilize Quill editor for rich text formatting and document creation.
 -  Document Management: Save, update, and retrieve documents from a MongoDB database.
 -  Recent Documents: Display a preview image of the first page of each document in the recent documents section.
 -  Real-time Collaboration: Allow multiple users to edit a document simultaneously.
